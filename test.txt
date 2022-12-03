@@ -1,0 +1,7 @@
+num_pages: number of pages use
+
+PAGE_LEN: 	0101	5
+1 << PAGE_LEN:	100000	32
+
+num_seg_entries: number of segment to enter{
+}
