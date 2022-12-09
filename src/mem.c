@@ -250,15 +250,15 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 	for (i = 0; i < num_pages; i++)
 	{
 		addr_t addr = virtual_address + i * PAGE_SIZE;
-		addr_t seg = get_first_lv(addr);
-		addr_t page = get_second_lv(addr);
-		struct trans_table_t * trans_table = get_trans_table(seg, proc->page_table);
+		addr_t first_lv = get_first_lv(addr);
+		addr_t second_lv = get_second_lv(addr);
+		struct trans_table_t * trans_table = get_trans_table(first_lv, proc->page_table);
 		if (trans_table == NULL)
 			continue;
-		//remove page
+		//remove 
 		for (int j = 0; j < trans_table->size; j++)
 		{
-			if (trans_table->table[j].v_index == page)
+			if (trans_table->table[j].v_index == second_lv)
 			{
 				trans_table->size--;
 				trans_table->table[j] = trans_table->table[trans_table->size];
@@ -270,7 +270,7 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 		{
 			for (int k = 0; k < proc->page_table->size; k++)
 			{
-				if (proc->page_table->table[k].v_index == seg)
+				if (proc->page_table->table[k].v_index == first_lv)
 				{
 					proc->page_table->size--;
 					proc->page_table->table[k] = proc->page_table->table[proc->page_table->size];
@@ -281,7 +281,7 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 		}
 	}
 
-	//update breakpoint
+	// update breakpoint
 	// if (virtual_address + num_pages * PAGE_SIZE == proc->bp) 
 	// {
 	// 	while (proc->bp >= PAGE_SIZE) {
