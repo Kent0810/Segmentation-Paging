@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 56651ad (commit all)
 #include "timer.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -129,8 +132,12 @@ void stop_timer() {
 		pthread_mutex_destroy(&temp->id.timer_lock);
 		free(temp);
 	}
+<<<<<<< HEAD
 }
 
 
 
 
+=======
+}
+>>>>>>> 56651ad (commit all)

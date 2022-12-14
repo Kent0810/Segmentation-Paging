@@ -36,9 +36,13 @@ sched: $(SCHED_OBJ)
 os: $(OS_OBJ)
 	$(MAKE) $(LFLAGS) $(OS_OBJ) -o os $(LIB)
 
+<<<<<<< HEAD
+test_all: test_mem test_sched test_os
+=======
 
 test_all: test_mem test_sched test_os
 testing: test_os_mlq
+>>>>>>> 56651ad (commit all)
 
 test_mem:
 	@echo ------ MEMORY MANAGEMENT TEST 0 ------------------------------------
@@ -64,6 +68,20 @@ test_os:
 	./os os_1
 	@echo NOTE: Read file output/os_1 to verify your result
 
+<<<<<<< HEAD
+=======
+test_os_mlq:
+	@echo ----- OS MLQ TEST 0 ----------------------------------------------------
+	./os os_mlq_0
+	@echo NOTE: Read file output/os_MLQ_0 to verify your result
+	@echo ----- OS MLQ TEST 1 ----------------------------------------------------
+	./os os_mlq_1
+	@echo NOTE: Read file output/os_MLQ_1 to verify your result
+	@echo ----- OS MLQ TEST 2 ----------------------------------------------------
+	./os os_mlq_2
+	@echo NOTE: Read file output/os_MLQ_2 to verify your result
+
+>>>>>>> 56651ad (commit all)
 $(OBJ)/%.o: %.c ${HEADER}
 	$(MAKE) $(CFLAGS) $< -o $@
 
@@ -71,4 +89,8 @@ clean:
 	rm -f obj/*.o os sched mem
 
 
+<<<<<<< HEAD
 
+=======
+# gcc -Iinclude  -Wall -g obj/cpu.o obj/loader.o obj/mem.o obj/queue.o obj/os.o obj/sched.o obj/timer.o -o os -lpthread
+>>>>>>> 56651ad (commit all)

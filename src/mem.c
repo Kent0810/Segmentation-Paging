@@ -16,6 +16,10 @@ static struct {
 } _mem_stat [NUM_PAGES];
 
 static pthread_mutex_t mem_lock;
+<<<<<<< HEAD
+=======
+static pthread_mutex_t ram_lock;
+>>>>>>> 56651ad (commit all)
 
 void init_mem(void) {
 	memset(_mem_stat, 0, sizeof(*_mem_stat) * NUM_PAGES);
@@ -161,7 +165,11 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc)
 				_mem_stat[i].proc = proc->pid;
 				_mem_stat[i].index = frame_index;
 				if (prev != -1) { // not initial page, update last page
+<<<<<<< HEAD
 					_mem_stat[prev].next = i;
+=======
+					_mem_stat[prev].next = i; // page has been used
+>>>>>>> 56651ad (commit all)
 				}
 				prev = i;
 
@@ -170,6 +178,7 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc)
 		  	  	valid.
 				*/
 				struct page_table_t * page_table = proc->page_table;
+<<<<<<< HEAD
 				if(page_table->table[0].next_lv == NULL) 
 				{
 					// if page table is null, set page table size = 0
@@ -183,21 +192,40 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc)
 				struct trans_table_t * trans_table = get_trans_table(segment_idx, page_table);
 				
 				
+=======
+				// printf("page_table->size: %d\n", page_table->size);
+ 				
+				addr_t virtual_address = ret_mem + (frame_index << OFFSET_LEN);
+				addr_t lv1 = get_first_lv(virtual_address);   //get the first layer index -page
+				addr_t lv2 = get_second_lv(virtual_address); //get the second layer index - trans
+				struct trans_table_t * trans_table = get_trans_table(lv1, page_table);
+>>>>>>> 56651ad (commit all)
 				
 				// if there is not trans_table in seg -> create new trans_table
 				if (trans_table == NULL) 
 				{
 					int idx = page_table->size;
+<<<<<<< HEAD
 					page_table->table[idx].v_index = segment_idx;
 					trans_table = (struct trans_table_t*) malloc(sizeof(struct trans_table_t));
 					page_table->table[idx].next_lv = (struct trans_table_t*) malloc(sizeof(struct trans_table_t));
 					trans_table = page_table->table[idx].next_lv;
+=======
+					page_table->table[idx].v_index = lv1;
+					// printf("page_table->table[idx].v_index: %05x\n", page_table->table[idx].v_index);
+					trans_table = (struct trans_table_t*) malloc(sizeof(struct trans_table_t));
+					page_table->table[idx].next_lv = trans_table;
+>>>>>>> 56651ad (commit all)
 					page_table->size++;
 				}
 
 				// update mem_stat
 				int idx = trans_table->size++;
+<<<<<<< HEAD
 				trans_table->table[idx].v_index = page_idx;
+=======
+				trans_table->table[idx].v_index = lv2; //mark the trans table as valid
+>>>>>>> 56651ad (commit all)
 				trans_table->table[idx].p_index = i;
 				if(frame_index == (num_pages-1))
 				{
@@ -205,10 +233,19 @@ addr_t alloc_mem(uint32_t size, struct pcb_t * proc)
 					_mem_stat[i].next = -1;
 					break;
 				}
+<<<<<<< HEAD
 				frame_index++; //update page index
 			}
 		}
 	}
+=======
+				frame_index++; //update frame index
+			}
+		}
+	}
+	// puts("--------------------------------");
+	// dump();
+>>>>>>> 56651ad (commit all)
 	pthread_mutex_unlock(&mem_lock);
 	return ret_mem;
 }
@@ -249,13 +286,21 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 	}
 	for (i = 0; i < num_pages; i++)
 	{
+<<<<<<< HEAD
 		addr_t addr = virtual_address + i * PAGE_SIZE;
+=======
+		addr_t addr = address + i * PAGE_SIZE; //virtual addr
+>>>>>>> 56651ad (commit all)
 		addr_t first_lv = get_first_lv(addr);
 		addr_t second_lv = get_second_lv(addr);
 		struct trans_table_t * trans_table = get_trans_table(first_lv, proc->page_table);
 		if (trans_table == NULL)
 			continue;
+<<<<<<< HEAD
 		//remove 
+=======
+		//remove trans
+>>>>>>> 56651ad (commit all)
 		for (int j = 0; j < trans_table->size; j++)
 		{
 			if (trans_table->table[j].v_index == second_lv)
@@ -264,9 +309,16 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 				trans_table->table[j] = trans_table->table[trans_table->size];
 				break;
 			}
+<<<<<<< HEAD
 		}
 		//remove table
 		if (trans_table->size == 0 && proc->page_table != NULL)
+=======
+			
+		}
+		//remove page
+		if (trans_table->size == 0)
+>>>>>>> 56651ad (commit all)
 		{
 			for (int k = 0; k < proc->page_table->size; k++)
 			{
@@ -280,6 +332,7 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 			}
 		}
 	}
+<<<<<<< HEAD
 
 	// update breakpoint
 	// if (virtual_address + num_pages * PAGE_SIZE == proc->bp) 
@@ -304,6 +357,10 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 	// 		if (last_page >= 0) break;
 	// 	}
 	// }
+=======
+	// puts("-----------------?----------------------");
+	// dump();
+>>>>>>> 56651ad (commit all)
 	pthread_mutex_unlock(&mem_lock);
 	return 0;
 }
@@ -312,8 +369,15 @@ int free_mem(addr_t address, struct pcb_t * proc) {
 
 int read_mem(addr_t address, struct pcb_t * proc, BYTE * data) {
 	addr_t physical_addr;
+<<<<<<< HEAD
 	if (translate(address, &physical_addr, proc)) {
 		*data = _ram[physical_addr];
+=======
+	pthread_mutex_lock(&ram_lock);
+	if (translate(address, &physical_addr, proc)) {
+		*data = _ram[physical_addr];
+		pthread_mutex_unlock(&ram_lock);
+>>>>>>> 56651ad (commit all)
 		return 0;
 	}else{
 		return 1;
@@ -322,8 +386,16 @@ int read_mem(addr_t address, struct pcb_t * proc, BYTE * data) {
 
 int write_mem(addr_t address, struct pcb_t * proc, BYTE data) {
 	addr_t physical_addr;
+<<<<<<< HEAD
 	if (translate(address, &physical_addr, proc)) {
 		_ram[physical_addr] = data;
+=======
+	pthread_mutex_lock(&ram_lock);
+	if (translate(address, &physical_addr, proc)) {
+		_ram[physical_addr] = data;
+		pthread_mutex_unlock(&ram_lock);
+
+>>>>>>> 56651ad (commit all)
 		return 0;
 	}else{
 		return 1;

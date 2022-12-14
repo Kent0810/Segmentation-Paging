@@ -8,12 +8,45 @@ int empty(struct queue_t * q) {
 
 void enqueue(struct queue_t * q, struct pcb_t * proc) {
 	/* TODO: put a new process to queue [q] */	
+<<<<<<< HEAD
+=======
+	if (q->size == 0){
+		q->proc[0] = proc;
+		q->size++;  
+	}
+	else{
+		// enqueue in increasing order of prio		
+		int idx = 0;
+		for (; idx<q->size; idx++){
+			if (proc->prio < q->proc[idx]->prio)
+				break;
+		}
+
+		for (int i=q->size-1; i>idx; i--){
+			q->proc[i] = q->proc[i-1];
+		}
+
+		q->proc[idx] = proc;
+		q->size++;
+	} 
+>>>>>>> 56651ad (commit all)
 }
 
 struct pcb_t * dequeue(struct queue_t * q) {
 	/* TODO: return a pcb whose prioprity is the highest
 	 * in the queue [q] and remember to remove it from q
 	 * */
+<<<<<<< HEAD
 	return NULL;
 }
 
+=======
+	if (q->size == 0) return NULL;
+	struct pcb_t* removeElement = q->proc[0];
+	for (int i=0; i<q->size-1; i++){
+		q->proc[i] = q->proc[i+1];
+	}
+	q->size--;
+	return removeElement;
+}
+>>>>>>> 56651ad (commit all)

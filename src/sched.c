@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 56651ad (commit all)
 #include "queue.h"
 #include "sched.h"
 #include <pthread.h>
@@ -9,7 +12,11 @@ static struct queue_t ready_queue;
 static struct queue_t run_queue;
 static pthread_mutex_t queue_lock;
 #define MLQ_SCHED
+<<<<<<< HEAD
 #define MAX_PRIO 5
+=======
+#define MAX_PRIO 140
+>>>>>>> 56651ad (commit all)
 
 #ifdef MLQ_SCHED
 static struct queue_t mlq_ready_queue[MAX_PRIO];
@@ -49,6 +56,18 @@ struct pcb_t * get_mlq_proc(void) {
 	/*TODO: get a process from PRIORITY [ready_queue].
 	 * Remember to use lock to protect the queue.
 	 * */
+<<<<<<< HEAD
+=======
+	pthread_mutex_lock(&queue_lock);
+	int i;
+	for (i = 0; i < MAX_PRIO; i++) {
+		if (!empty(&mlq_ready_queue[i])) break;
+	}
+	if (i < MAX_PRIO) {
+		proc = dequeue(&mlq_ready_queue[i]);
+	}
+	pthread_mutex_unlock(&queue_lock);
+>>>>>>> 56651ad (commit all)
 	return proc;	
 }
 
@@ -95,6 +114,10 @@ void add_proc(struct pcb_t * proc) {
 	enqueue(&ready_queue, proc);
 	pthread_mutex_unlock(&queue_lock);	
 }
+<<<<<<< HEAD
 #endif
 
 
+=======
+#endif
+>>>>>>> 56651ad (commit all)

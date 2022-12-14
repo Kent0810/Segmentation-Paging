@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 56651ad (commit all)
 #include "loader.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,7 +50,11 @@ struct pcb_t * load(const char * path) {
 	}
 	char opcode[10];
 	proc->code = (struct code_seg_t*)malloc(sizeof(struct code_seg_t));
+<<<<<<< HEAD
 	fscanf(file, "%u %u", &proc->priority, &proc->code->size);
+=======
+	fscanf(file, "%u %u", &proc->prio, &proc->code->size);
+>>>>>>> 56651ad (commit all)
 	proc->code->text = (struct inst_t*)malloc(
 		sizeof(struct inst_t) * proc->code->size
 	);
@@ -85,7 +92,11 @@ struct pcb_t * load(const char * path) {
 		}
 	}
 	return proc;
+<<<<<<< HEAD
 }
 
 
 
+=======
+}
+>>>>>>> 56651ad (commit all)
